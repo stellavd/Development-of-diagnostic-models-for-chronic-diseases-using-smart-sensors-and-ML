@@ -1,0 +1,21 @@
+name: TLapp
+
+on:
+  push:
+    branches:
+      - main # This will trigger on pushes to the `main` branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository to the runner
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      # build the image
+      - name: Login Build and push the image
+        run: |
+          docker login --username svd08 --password ${{ secrets.STOKEN }}
+          docker build . --tag svd08/tlsth:latest
+          docker push svd08/tlsth:latest
