@@ -92,13 +92,13 @@ def main():
 
         if os.path.exists(bar_path):
             with cols[0]:
-                st.image(Image.open(bar_path), caption="SHAP Bar Plot", use_container_width=True)
+                st.image(Image.open(bar_path), caption="SHAP Bar Plot")
         else:
             st.error(f"Missing SHAP bar plot: {bar_path}")
 
         if os.path.exists(swarm_path):
             with cols[1]:
-                st.image(Image.open(swarm_path), caption="SHAP Beeswarm Plot", use_container_width=True)
+                st.image(Image.open(swarm_path), caption="SHAP Beeswarm Plot")
         else:
             st.error(f"Missing SHAP beeswarm plot: {swarm_path}")
     else:
