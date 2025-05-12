@@ -80,7 +80,7 @@ def main():
         diagnoses = shap_summary["Class"].unique().tolist()
         selected_diagnosis = st.selectbox("Select Diagnosis Class", diagnoses)
 
-        # SHAP Table - Full feature display with height
+        # SHAP Table - Show all features
         st.markdown(f"#### 🔬 SHAP Feature Ranking - {selected_diagnosis}")
         class_df = shap_summary[shap_summary["Class"] == selected_diagnosis].copy()
         st.dataframe(
@@ -96,3 +96,59 @@ def main():
 
         if os.path.exists(bar_path):
             with cols[0]:
+                st.image(Image.open(bar_path), caption="SHAP Bar Plot")
+        else:
+            st.error(f"Missing SHAP bar plot: {bar_path}")
+
+        if os.path.exists(swarm_path):
+            with cols[1]:
+                st.image(Image.open(swarm_path), caption="SHAP Beeswarm Plot")
+        else:
+            st.error(f"Missing SHAP beeswarm plot: {swarm_path}")
+    else:
+        st.warning("No SHAP summary available.")
+
+    st.markdown("---")
+
+    # --- Confusion Matrix ---
+    st.subheader("🧮 Confusion Matrix")
+    cm_path_img = "results/confusion_matrix.png"
+    cm_path_csv = "results/confusion_matrix.csv"
+
+    cols = st.columns(2)
+    if os.path.exists(cm_path_img):
+        with cols[0]:
+            st.image(Image.open(cm_path_img), caption="Confusion Matrix")
+    else:
+        st.warning("No confusion matrix image found.")
+
+    if os.path.exists(cm_path_csv):
+        with cols[1]:
+            cm_df = pd.read_csv(cm_path_csv, index_col=0)
+            st.dataframe(cm_df, use_container_width=True)
+    else:
+        st.warning("No confusion matrix CSV found.")
+
+    st.markdown("---")
+
+    # --- Global SHAP Importance ---
+    st.subheader("🌍 Global SHAP Feature Importance (All Classes Combined)")
+    if not shap_summary.empty:
+        global_df = (
+            shap_summary
+            .groupby("Feature", as_index=False)
+            .agg({"MeanAbsSHAP": "mean"})
+            .sort_values(by="MeanAbsSHAP", ascending=False)
+        )
+        st.dataframe(global_df.set_index("Feature"), use_container_width=True)
+        st.bar_chart(global_df.set_index("Feature").head(15))
+
+        # Save as PNG
+        save_global_bar_chart(global_df)
+        st.success("📁 Global feature importance plot saved to `results/shap/global_feature_importance.png`")
+    else:
+        st.warning("No SHAP summary available to compute global importance.")
+
+# === Main Thread ===
+if __name__ == "__main__":
+    main()
