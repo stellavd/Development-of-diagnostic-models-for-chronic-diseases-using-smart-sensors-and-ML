@@ -1,6 +1,3 @@
-Great! Here's the full `README.md` content, ready for you to copy and paste:
-
-````markdown
 # Development of Diagnostic Models for Chronic Diseases Using Smart Sensors and Machine Learning
 
 This project focuses on developing machine learning models to diagnose chronic diseases by leveraging data collected from smart sensors. The objective is to facilitate early detection and monitoring of chronic conditions such as diabetes, cardiovascular diseases, and kidney disorders through advanced data analytics and predictive modeling.
